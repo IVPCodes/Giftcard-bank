@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#263f77">
+<title>Meine Gutscheine</title>
+<style>
+:root{
+  --bg:#f4f6fb;--surface:#fff;--surface-2:#f2f5fa;--border:#e1e6ef;--text:#172033;--muted:#5d6b81;
+  --primary:#263f77;--primary-hover:#1d3260;--on-primary:#fff;--danger:#a12828;--danger-bg:#fff0f0;
+  --focus:#4a78e0;--shadow:0 1px 2px rgba(23,32,51,.04),0 4px 14px rgba(23,32,51,.05);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0e1320;--surface:#171e30;--surface-2:#1f2740;--border:#2a3452;--text:#e8ecf5;--muted:#9aa7bf;
+    --primary:#7b9cf0;--primary-hover:#98b2f5;--on-primary:#0e1320;--danger:#ff9b9b;--danger-bg:#3a1f26;
+    --focus:#8fb0ff;--shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding:24px 14px 56px;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:auto}
+h1{margin:0 0 4px;font-size:1.7rem;letter-spacing:-.01em}
+h2{margin:0 0 12px;font-size:1.15rem}
+p{color:var(--muted);margin:.3em 0}
+.lead{margin-bottom:18px}
+section{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+details.privacy{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin:14px 0}
+details.privacy summary{cursor:pointer;font-weight:650;color:var(--text)}
+details.privacy p{margin:8px 0 0;font-size:.92rem}
+label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 5px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.7}
+textarea{resize:vertical}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline-offset:0;border-color:var(--focus)}
+button{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:650;cursor:pointer;transition:background .15s,transform .05s}
+button:active{transform:translateY(1px)}
+.primary{background:var(--primary);color:var(--on-primary);margin-top:16px}
+.primary:hover{background:var(--primary-hover)}
+.soft{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+.soft:hover{border-color:var(--primary)}
+.danger{background:var(--danger-bg);color:var(--danger)}
+.btn-sm{padding:7px 12px;font-size:.88rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:.82rem;color:var(--muted);margin-top:4px}
+.error{color:var(--danger);font-size:.85rem;margin-top:4px;min-height:1.2em}
+.summary{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.total{font-size:2rem;font-weight:780;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin:16px 0 6px}
+.toolbar label{margin:0;position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.toolbar select{width:auto}
+.entry{display:flex;gap:14px;border-top:1px solid var(--border);padding:16px 0}
+.entry:first-child{border-top:0}
+.avatar{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:750;color:#fff;font-size:1.05rem}
+.body{flex:1;min-width:0}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.head strong{overflow-wrap:anywhere}
+.amount{font-weight:750;white-space:nowrap;font-variant-numeric:tabular-nums}
+.small{font-size:.85rem;color:var(--muted)}
+.code{display:inline-block;font:.85rem ui-monospace,Menlo,Consolas,monospace;background:var(--surface-2);padding:4px 8px;border-radius:7px;overflow-wrap:anywhere;margin:6px 0 0;color:var(--text)}
+.note{margin:6px 0 0;font-size:.92rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.empty{text-align:center;padding:28px 10px 18px}
+.empty .emoji{font-size:2.4rem}
+.empty strong{display:block;color:var(--text);margin-top:6px}
+.footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.footer-actions .danger{margin-left:auto}
+dialog{border:1px solid var(--border);border-radius:18px;padding:22px;max-width:460px;width:calc(100% - 28px);background:var(--surface);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(10,14,25,.55)}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.dialog-actions .primary{margin-top:0}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 16px;border-radius:12px;display:flex;gap:14px;align-items:center;opacity:0;pointer-events:none;transition:.2s;max-width:calc(100% - 28px);z-index:10;font-size:.92rem}
+.toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.toast button{background:transparent;color:inherit;text-decoration:underline;padding:2px 4px;font-weight:700}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .footer-actions .danger{margin-left:0}
+  h1{font-size:1.45rem}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🎟️ Meine Gutscheine</h1>
+    <p class="lead">Deine persönliche Übersicht über Gutscheinkarten und Guthaben.</p>
+  </header>
+
+  <details class="privacy">
+    <summary>🔒 Datenschutz-Hinweis</summary>
+    <p>Deine Einträge werden automatisch in diesem Browser auf diesem Gerät gespeichert und nicht online übertragen. Wer Zugriff auf dein entsperrtes Gerät oder Browserprofil hat, könnte sie sehen. Speichere am besten keine vollständigen Gutscheincodes oder PINs, sondern nur einen Hinweis oder die letzten Stellen.</p>
+  </details>
+
+  <section aria-labelledby="addTitle">
+    <h2 id="addTitle">Gutschein hinzufügen</h2>
+    <form id="form" novalidate>
+      <label for="kind">Art der Karte</label>
+      <input id="kind" required maxlength="80" autocomplete="off" placeholder="z. B. paysafecard oder Google Play">
+      <div class="error" id="kindErr" aria-live="polite"></div>
+
+      <div class="grid">
+        <div>
+          <label for="balance">Guthaben in Euro</label>
+          <input id="balance" inputmode="decimal" required autocomplete="off" placeholder="25,00">
+          <div class="error" id="balanceErr" aria-live="polite"></div>
+        </div>
+        <div>
+          <label for="date">Kaufdatum</label>
+          <input id="date" type="date">
+        </div>
+      </div>
+
+      <label for="code">Code-Hinweis <span class="small">(optional)</span></label>
+      <input id="code" maxlength="60" autocomplete="off" placeholder="z. B. endet auf 1234">
+
+      <label for="note">Notiz <span class="small">(optional)</span></label>
+      <textarea id="note" rows="2" maxlength="500" placeholder="Weitere Informationen"></textarea>
+
+      <button class="primary" type="submit">Gutschein speichern</button>
+    </form>
+  </section>
+
+  <section aria-labelledby="listTitle">
+    <div class="summary">
+      <div>
+        <h2 id="listTitle" style="margin:0">Meine Übersicht</h2>
+        <p class="small" id="count">Gesamtes eingetragenes Guthaben</p>
+      </div>
+      <div class="total" id="total" aria-live="polite">0,00 €</div>
+    </div>
+
+    <div class="toolbar" id="toolbar" hidden>
+      <div>
+        <label for="search">Suchen</label>
+        <input id="search" type="search" placeholder="🔍 Suchen …" autocomplete="off">
+      </div>
+      <div>
+        <label for="sort">Sortieren</label>
+        <select id="sort">
+          <option value="new">Neueste zuerst</option>
+          <option value="high">Höchstes Guthaben</option>
+          <option value="low">Niedrigstes Guthaben</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="footer-actions">
+      <button class="soft" id="export" type="button">⬇ Sicherung exportieren</button>
+      <button class="soft" id="importBtn" type="button">⬆ Sicherung importieren</button>
+      <button class="danger" id="clear" type="button">Alle löschen</button>
+      <input id="file" type="file" accept="application/json,.json" hidden>
+    </div>
+    <p class="hint">Tipp: Exportiere gelegentlich eine Sicherung. Die Sicherungsdatei kann vertrauliche Angaben enthalten.</p>
+  </section>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <form id="editForm" novalidate>
+    <h2 id="dlgTitle">Gutschein bearbeiten</h2>
+    <label for="eKind">Art der Karte</label>
+    <input id="eKind" required maxlength="80" autocomplete="off">
+    <div class="error" id="eKindErr" aria-live="polite"></div>
+    <div class="grid">
+      <div>
+        <label for="eBalance">Guthaben in Euro</label>
+        <input id="eBalance" inputmode="decimal" required autocomplete="off">
+        <div class="error" id="eBalanceErr" aria-live="polite"></div>
+      </div>
+      <div>
+        <label for="eDate">Kaufdatum</label>
+        <input id="eDate" type="date">
+      </div>
+    </div>
+    <label for="eCode">Code-Hinweis</label>
+    <input id="eCode" maxlength="60" autocomplete="off">
+    <label for="eNote">Notiz</label>
+    <textarea id="eNote" rows="2" maxlength="500"></textarea>
+    <div class="dialog-actions">
+      <button class="soft" type="button" id="eCancel">Abbrechen</button>
+      <button class="primary" type="submit">Speichern</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastUndo" type="button" hidden>Rückgängig</button></div>
+
+<script>
+const STORAGE_KEY='meine_gutscheine_v1';
+let entries=[],editingId=null,undoState=null,toastTimer=null;
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(n);
+const fmtDate=d=>{if(!d)return '';const t=new Date(d+'T00:00:00');return isNaN(t)?d:t.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function parseAmount(v){
+  let s=String(v).trim().replace(/[€\s]/g,'');
+  if(!s)return NaN;
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
+  const n=Number(s);
+  return Number.isFinite(n)&&n>=0?Math.round(n*100)/100:NaN;
+}
+function sanitize(list){
+  return list.filter(x=>x&&typeof x==='object').map(x=>({
+    id:typeof x.id==='string'&&x.id?x.id:uid(),
+    kind:String(x.kind??'').trim().slice(0,80)||'Gutschein',
+    balance:Number.isFinite(Number(x.balance))&&Number(x.balance)>=0?Number(x.balance):0,
+    date:/^\d{4}-\d{2}-\d{2}$/.test(x.date||'')?x.date:'',
+    code:String(x.code??'').trim().slice(0,60),
+    note:String(x.note??'').trim().slice(0,500),
+    created:Number(x.created)||0
+  }));
+}
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(entries));}
+  catch(e){alert('Speichern im Browser war nicht möglich. Bitte prüfe den verfügbaren Speicher.');}
+  render();
+}
+function load(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);const p=raw?JSON.parse(raw):[];entries=Array.isArray(p)?sanitize(p):[];}
+  catch(e){entries=[];}
+  // ältere Einträge ohne Zeitstempel behalten ihre Reihenfolge
+  entries.forEach((x,i)=>{if(!x.created)x.created=i+1;});
+  render();
+}
+
+function color(name){
+  let h=0;for(const c of name.toLowerCase())h=(h*31+c.charCodeAt(0))%360;
+  return `hsl(${h} 45% 42%)`;
+}
+
+function render(){
+  const total=entries.reduce((s,x)=>s+x.balance,0);
+  $('total').textContent=money(total);
+  $('count').textContent=entries.length?`${entries.length} ${entries.length===1?'Gutschein':'Gutscheine'} · Gesamtes Guthaben`:'Gesamtes eingetragenes Guthaben';
+  $('toolbar').hidden=entries.length<2;
+
+  const q=$('search').value.trim().toLowerCase(),mode=$('sort').value;
+  let view=entries.filter(x=>!q||[x.kind,x.code,x.note].some(f=>f.toLowerCase().includes(q)));
+  const sorters={
+    new:(a,b)=>b.created-a.created,
+    high:(a,b)=>b.balance-a.balance,
+    low:(a,b)=>a.balance-b.balance,
+    name:(a,b)=>a.kind.localeCompare(b.kind,'de')
+  };
+  view.sort(sorters[mode]||sorters.new);
+
+  if(!entries.length){
+    $('list').innerHTML='<div class="empty"><div class="emoji">🗂️</div><strong>Noch keine Gutscheine</strong><p>Trage oben deine erste Karte ein – sie erscheint dann hier.</p></div>';
+    return;
+  }
+  if(!view.length){
+    $('list').innerHTML='<div class="empty"><strong>Keine Treffer</strong><p>Passe deine Suche an.</p></div>';
+    return;
+  }
+  $('list').innerHTML=view.map(x=>`<article class="entry" data-id="${safe(x.id)}">
+    <div class="avatar" style="background:${color(x.kind)}" aria-hidden="true">${safe(x.kind.charAt(0).toUpperCase())}</div>
+    <div class="body">
+      <div class="head"><div><strong>${safe(x.kind)}</strong><div class="small">${x.date?'Gekauft am '+safe(fmtDate(x.date)):'Kein Kaufdatum'}</div></div><div class="amount">${money(x.balance)}</div></div>
+      ${x.code?`<div class="code">${safe(x.code)}</div>`:''}
+      ${x.note?`<p class="note">${safe(x.note)}</p>`:''}
+      <div class="actions">
+        <button class="soft btn-sm" data-act="edit" type="button" aria-label="${safe(x.kind)} bearbeiten">Bearbeiten</button>
+        <button class="danger btn-sm" data-act="delete" type="button" aria-label="${safe(x.kind)} löschen">Löschen</button>
+      </div>
+    </div>
+  </article>`).join('');
+}
+
+function toast(msg,undo){
+  $('toastMsg').textContent=msg;
+  $('toastUndo').hidden=!undo;
+  $('toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{$('toast').classList.remove('show');undoState=null;},undo?7000:2500);
+}
+
+function setErr(id,msg){$(id).textContent=msg||'';}
+
+$('form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const kind=$('kind').value.trim(),bal=parseAmount($('balance').value);
+  setErr('kindErr',kind?'':'Bitte gib die Art der Karte an.');
+  setErr('balanceErr',Number.isNaN(bal)?'Bitte gib einen gültigen Betrag ein, z. B. 25,00.':'');
+  if(!kind||Number.isNaN(bal))return;
+  entries.push({id:uid(),kind,balance:bal,date:$('date').value,code:$('code').value.trim(),note:$('note').value.trim(),created:Date.now()});
+  save();e.target.reset();$('kind').focus();toast('Gutschein gespeichert ✓');
+});
+
+$('list').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-act]');if(!btn)return;
+  const id=btn.closest('.entry').dataset.id,i=entries.findIndex(x=>x.id===id);if(i<0)return;
+  if(btn.dataset.act==='delete'){
+    undoState={item:entries[i],index:i};
+    entries.splice(i,1);save();toast('Gutschein gelöscht',true);
+  }else{
+    const x=entries[i];editingId=id;
+    $('eKind').value=x.kind;$('eBalance').value=String(x.balance).replace('.',',');
+    $('eDate').value=x.date;$('eCode').value=x.code;$('eNote').value=x.note;
+    setErr('eKindErr');setErr('eBalanceErr');
+    $('dlg').showModal();$('eKind').focus();
+  }
+});
+$('toastUndo').onclick=()=>{
+  if(!undoState)return;
+  entries.splice(Math.min(undoState.index,entries.length),0,undoState.item);
+  undoState=null;save();$('toast').classList.remove('show');
+};
+
+$('editForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const kind=$('eKind').value.trim(),bal=parseAmount($('eBalance').value);
+  setErr('eKindErr',kind?'':'Bitte gib die Art der Karte an.');
+  setErr('eBalanceErr',Number.isNaN(bal)?'Ungültiger Betrag.':'');
+  if(!kind||Number.isNaN(bal))return;
+  const i=entries.findIndex(x=>x.id===editingId);
+  if(i>=0)entries[i]={...entries[i],kind,balance:bal,date:$('eDate').value,code:$('eCode').value.trim(),note:$('eNote').value.trim()};
+  $('dlg').close();save();toast('Änderungen gespeichert ✓');
+});
+$('eCancel').onclick=()=>$('dlg').close();
+$('dlg').addEventListener('click',e=>{if(e.target===$('dlg'))$('dlg').close();});
+
+$('search').addEventListener('input',render);
+$('sort').addEventListener('change',render);
+
+$('clear').onclick=()=>{
+  if(!entries.length)return;
+  if(confirm('Wirklich alle Gutscheine aus diesem Browser löschen?')){entries=[];save();toast('Alle Gutscheine gelöscht');}
+};
+
+$('export').onclick=()=>{
+  if(!entries.length){toast('Es gibt noch nichts zu exportieren.');return;}
+  const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='meine-gutscheine-sicherung-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+$('importBtn').onclick=()=>$('file').click();
+$('file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const data=JSON.parse(await f.text());
+    if(!Array.isArray(data))throw Error();
+    if(confirm(`Import ersetzt deine aktuelle Gutscheinliste durch ${data.length} Einträge. Fortfahren?`)){
+      entries=sanitize(data);entries.forEach((x,i)=>{if(!x.created)x.created=i+1;});save();toast('Sicherung importiert ✓');
+    }
+  }catch{alert('Diese Sicherungsdatei ist ungültig.');}
+  e.target.value='';
+};
+
+load();
+</script>
+</body>
+</html>
